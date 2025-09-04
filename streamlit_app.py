@@ -44,7 +44,7 @@ def create_grid_visualization(grid, title="ドット絵", show_values=False):
         width=400,
         height=400,
         xaxis=dict(showticklabels=False, showgrid=False),
-        yaxis=dict(showticklabels=False, showgrid=False)
+        yaxis=dict(showticklabels=False, showgrid=False, autorange='reversed')
     )
     
     return fig
