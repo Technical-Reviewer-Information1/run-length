@@ -74,11 +74,40 @@ with col2:
     fig = create_grid_visualization(st.session_state.grid)
     st.plotly_chart(fig, use_container_width=True)
 
-# Reset button
-if st.button("グリッドをリセット", type="secondary"):
-    st.session_state.grid = np.zeros((5, 5), dtype=int)
-    st.session_state.step = 0
-    st.rerun()
+# Pattern selection and reset buttons
+st.write("**パターンの実験**: 異なるパターンを試して、圧縮率の違いを体験してみましょう！")
+
+pattern_col1, pattern_col2, pattern_col3, reset_col = st.columns([1, 1, 1, 1])
+
+with pattern_col1:
+    if st.button("全て白のパターン", use_container_width=True):
+        st.session_state.grid = np.ones((5, 5), dtype=int)
+        st.session_state.step = 0
+        st.rerun()
+
+with pattern_col2:
+    if st.button("チェッカーパターン", use_container_width=True):
+        checker = np.zeros((5, 5), dtype=int)
+        for i in range(5):
+            for j in range(5):
+                checker[i][j] = (i + j) % 2
+        st.session_state.grid = checker
+        st.session_state.step = 0
+        st.rerun()
+
+with pattern_col3:
+    if st.button("ストライプパターン", use_container_width=True):
+        stripe = np.zeros((5, 5), dtype=int)
+        stripe[:, ::2] = 1  # Every other column is white
+        st.session_state.grid = stripe
+        st.session_state.step = 0
+        st.rerun()
+
+with reset_col:
+    if st.button("グリッドをリセット", type="secondary", use_container_width=True):
+        st.session_state.grid = np.zeros((5, 5), dtype=int)
+        st.session_state.step = 0
+        st.rerun()
 
 st.markdown("---")
 
@@ -253,32 +282,3 @@ st.info("""
 適切な画像に使えば大きな圧縮効果を得られますが、不適切な画像では逆にデータ量が増えてしまうこともあります。
 """)
 
-# Example patterns
-st.subheader("🔍 パターンの実験")
-st.write("異なるパターンを試して、圧縮率の違いを体験してみましょう！")
-
-pattern_col1, pattern_col2, pattern_col3 = st.columns([1, 1, 1])
-
-with pattern_col1:
-    if st.button("全て白のパターン", use_container_width=True):
-        st.session_state.grid = np.ones((5, 5), dtype=int)
-        st.session_state.step = 0
-        st.rerun()
-
-with pattern_col2:
-    if st.button("チェッカーパターン", use_container_width=True):
-        checker = np.zeros((5, 5), dtype=int)
-        for i in range(5):
-            for j in range(5):
-                checker[i][j] = (i + j) % 2
-        st.session_state.grid = checker
-        st.session_state.step = 0
-        st.rerun()
-
-with pattern_col3:
-    if st.button("ストライプパターン", use_container_width=True):
-        stripe = np.zeros((5, 5), dtype=int)
-        stripe[:, ::2] = 1  # Every other column is white
-        st.session_state.grid = stripe
-        st.session_state.step = 0
-        st.rerun()
