@@ -6,7 +6,7 @@ import pandas as pd
 
 st.set_page_config(page_title="データの圧縮②ランレングス法", page_icon="🔢", layout="wide")
 
-st.title("データの圧縮②ランレングス法")
+st.title("データの圧縮②ランレングス法（pp.168-170）")
 st.caption("Created by Dit-Lab.(Daiki ITO)")
 st.caption("Supported by Tomoaki ATSUMI")
 
