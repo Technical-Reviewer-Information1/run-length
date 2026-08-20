@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>データの圧縮②　ランレングス法｜情報Ⅰ共通テスト対策問題集</title>
+<meta name="description" content="マス目をクリックして白黒の絵を描くと、その場でランレングス法の圧縮結果と圧縮率が出ます。本文の図や選択肢もすべて再現できます。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%2315181c%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2218%22 font-family=%22monospace%22 fill=%22%23fff%22 text-anchor=%22middle%22%3E01%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="inner">
+    <span class="eyebrow">第 5 章　デジタル　5-13</span>
+    <h1>データの圧縮②　ランレングス法（pp.168-169）</h1>
+    <p class="lead">マス目をクリックして白黒の絵を描くと、その場でランレングス法の圧縮結果と圧縮率が出ます。本文の図や選択肢もすべて再現できます。</p>
+    <p class="credit">Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="step" id="step1">
+    <h2><span class="no">STEP 1</span>読み取りの手順をなぞる</h2>
+    <p class="desc">本文の図1と同じ画像です。左上から1行ずつ右へ、右端まで行ったら次の行の左端へ。1マスずつ進めてみましょう。</p>
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <table class="rlgrid" id="demoGrid"></table>
+          <div class="btn-row" style="margin-top:12px;justify-content:center">
+            <button class="btn" id="dPrev">◀ 1マス戻る</button>
+            <button class="btn" id="dNext">1マス進む ▶</button>
+            <button class="btn" id="dAll">最後まで</button>
+            <button class="btn" id="dReset">最初から</button>
+          </div>
+        </div>
+        <div>
+          <p class="qhead" style="margin:0 0 4px">手順2：連続する個数を数える</p>
+          <div class="runs" id="demoRuns"></div>
+          <div class="eqbox" id="demoEq" style="margin-top:12px">—</div>
+          <div class="note" id="demoNote" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step2">
+    <h2><span class="no">STEP 2</span>自分で絵を描いて圧縮する</h2>
+    <p class="desc">マス目をクリック（タップ）すると白黒が入れかわります。<strong>いちばん圧縮率が小さくなる絵</strong>を探してみましょう。</p>
+    <div class="panel">
+      <div class="grid c2">
+        <div>
+          <label class="fld" for="size">画像の大きさ：<span class="mono" id="sizeV">5</span> × <span class="mono" id="sizeV2">5</span></label>
+          <input type="range" id="size" min="3" max="12" step="1" value="5">
+          <div class="btn-row" style="margin-top:10px;flex-wrap:wrap">
+            <button class="btn" data-pat="fig1">本文の図1</button>
+            <button class="btn" data-pat="fig2">本文の図2</button>
+            <button class="btn" data-pat="stripe">横しま</button>
+            <button class="btn" data-pat="vstripe">縦しま</button>
+            <button class="btn" data-pat="check">市松</button>
+            <button class="btn" data-pat="clear">全部白</button>
+          </div>
+          <div style="margin-top:14px"><table class="rlgrid" id="editGrid"></table></div>
+        </div>
+        <div>
+          <p class="qhead" style="margin:0 0 4px">圧縮したデータ</p>
+          <div class="runs" id="editRuns"></div>
+          <div class="metrics" style="margin-top:12px">
+            <div class="metric"><div class="k">かたまりの個数</div><div class="v" id="mRuns">—</div></div>
+            <div class="metric"><div class="k">最大値／必要ビット数</div><div class="v" id="mBits">—</div></div>
+          </div>
+          <div class="metrics" style="margin-top:10px">
+            <div class="metric"><div class="k">圧縮前</div><div class="v" id="mBefore">—</div></div>
+            <div class="metric"><div class="k">圧縮後</div><div class="v" id="mAfter">—</div></div>
+            <div class="metric"><div class="k">圧縮率</div><div class="v" id="mRatio" style="font-size:1.4rem">—</div></div>
+          </div>
+          <div class="note" id="editNote" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step" id="step3">
+    <h2><span class="no">STEP 3</span>4つの画像を比べる（問1b【カ】）</h2>
+    <p class="desc">同じ25画素でも、模様によって圧縮後のデータ量は変わります。<strong>圧縮率がいちばん小さい</strong>のはどれでしょう。</p>
+    <div class="panel">
+      <div class="cands" id="candBox"></div>
+      <div class="btn-row" style="margin-top:12px"><button class="btn" id="showCand">計算結果を表示する</button></div>
+      <div class="tbl-scroll" style="margin-top:12px"><table class="tbl" id="candTable"></table></div>
+      <div class="note" id="candNote" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="step" id="step4">
+    <h2><span class="no">STEP 4</span>本文の問題を確かめる</h2>
+    <div class="panel" id="blankBox"></div>
+    <div class="note" id="blankNote" style="margin-top:10px"></div>
+  </section>
+
+  <section class="step" id="glossary">
+    <h2><span class="no">用語</span>この節で出てくることば</h2>
+    <div class="panel"><div id="glossBox"></div></div>
+  </section>
+
+  <section class="step" id="wrap">
+    <h2><span class="no">まとめ</span>おさえておきたいこと</h2>
+    <div class="panel">
+      <ul class="bullets">
+        <li><strong>ランレングス法</strong>＝同じデータが連続するとき、そのデータと連続する回数を並べて表す圧縮法。<strong>可逆圧縮</strong>の一つ。</li>
+        <li>手順は「①左上から1行ずつ読む → ②連続する個数を数える → ③最大値を表せる最小のビット数 × かたまりの個数」。</li>
+        <li>白黒2値画像は1画素1ビット。5×5なら圧縮前は 25ビット。</li>
+        <li>圧縮率（％）＝ 圧縮後 ÷ 圧縮前 × 100。<strong>小さいほどよく縮んでいる</strong>。</li>
+        <li>同じ値が長く続く画像ほどよく縮む。逆に<strong>連続が少ないと圧縮効率が下がり</strong>、市松模様のようにかえって増えることもある。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="step">
+    <h2><span class="no">活用</span>授業・探究での使い方</h2>
+    <div class="use-note">
+      <h3>授業で</h3>
+      <ul>
+        <li>STEP 1 で読み取りの順序を1マスずつ動かし、手順1〜3を目で追わせる。</li>
+        <li>STEP 2 で「いちばん圧縮率が小さくなる絵」を各自にデザインさせ、理由を説明させる。</li>
+        <li>STEP 3 の4つの画像を比べ、なぜ横しま模様がいちばん縮むのかを考えさせる。</li>
+      </ul>
+      <h3 style="margin-top:12px">探究で</h3>
+      <ul>
+        <li>同じ絵を90度回転させると圧縮率がどう変わるかを調べ、読み取り方向との関係を考える。</li>
+        <li>写真のような画像でランレングス法が役に立たない理由を、実際の値で説明する。</li>
+        <li>FAXや白黒の図面でランレングス法が使われてきた理由を調べる。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  情報Ⅰ 共通テスト対策問題集（技術評論社）連動Webアプリ　/　Created by Dit-Lab.(Daiki ITO)　/　Supported by Tomoaki ATSUMI
+</footer>
+
+<script src="js/tools.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/terms.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
