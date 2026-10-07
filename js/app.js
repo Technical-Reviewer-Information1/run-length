@@ -205,5 +205,19 @@
     drawDemo(); drawEdit(); drawCands(); drawBlanks();
     window.Terms.attach();
   }
+  if (window.Predict) Predict.make('pdR', {
+    q: '5×5の<strong>市松模様</strong>（1マスごとに色が変わる絵）をランレングス法で圧縮すると、データ量はどうなるでしょう？',
+    type: 'pick',
+    ch: ['半分以下に減る', '少しだけ減る', 'まったく変わらない', 'かえって増える'],
+    answer: function () { return 2; },
+    show: function () {
+      return 'かたまりが <strong>25個</strong>できます。長さはすべて1なので1ビットで足り、' +
+             '<span class="mono">1 × 25 ＝ 25ビット</span>。もとの25マス（25ビット）と<strong>まったく同じ</strong>で、圧縮率100％です。';
+    },
+    why: 'ランレングス法は「<strong>同じ色が続くこと</strong>」を利用する方法なので、続かない絵では効きません。' +
+         '写真のように色が細かく変わる画像では、この方法だけでは小さくならないのです。' +
+         'どんなデータでも必ず縮む圧縮方法は存在しません。'
+  });
+
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
